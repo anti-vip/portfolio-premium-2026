@@ -5,9 +5,9 @@ import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { label: "Projets", href: "#projects" },
-  { label: "Systeme", href: "#system" },
-  { label: "Client", href: "#contact" }
+  { label: "Projets", href: "/#projects" },
+  { label: "Systeme", href: "/#system" },
+  { label: "Client", href: "/#contact" }
 ];
 
 export function SiteNav() {
@@ -44,7 +44,7 @@ export function SiteNav() {
       ].join(" ")}
     >
       <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full border border-white/10 bg-background/50 px-3 shadow-[0_18px_70px_rgba(0,0,0,0.34)] backdrop-blur-2xl">
-        <a href="#" className="flex items-center gap-3 px-2">
+        <a href="/" className="flex min-h-11 items-center gap-3 px-2">
           <span className="grid size-8 place-items-center rounded-full border border-primary/30 bg-primary/10 text-xs font-bold text-primary">
             P26
           </span>
@@ -58,7 +58,7 @@ export function SiteNav() {
             <a
               key={item.href}
               href={item.href}
-              className="rounded-full px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="inline-flex min-h-11 items-center rounded-full px-4 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               {item.label}
             </a>
@@ -66,7 +66,7 @@ export function SiteNav() {
         </div>
 
         <Button asChild size="sm" variant="secondary">
-          <a href="#contact">
+          <a href="/#contact">
             Brief
             <ArrowUpRight aria-hidden="true" data-icon="inline-end" />
           </a>
