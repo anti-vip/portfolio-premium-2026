@@ -1,7 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  type Transition,
+  type Variants
+} from "framer-motion";
 import { CheckCircle2, MailCheck, ShieldCheck } from "lucide-react";
 import { requestClientAccess } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -12,13 +17,13 @@ const initialState: AccessActionState = {
   message: ""
 };
 
-const feedbackMotion = {
+const feedbackMotion: Variants = {
   initial: { opacity: 0, y: 12, filter: "blur(10px)" },
   animate: { opacity: 1, y: 0, filter: "blur(0px)" },
   exit: { opacity: 0, y: -8, filter: "blur(10px)" }
 };
 
-const feedbackTransition = { duration: 0.42, ease: "easeOut" } as const;
+const feedbackTransition: Transition = { duration: 0.42, ease: "easeOut" };
 
 export function ClientAccess() {
   const [state, formAction, isPending] = useActionState(
