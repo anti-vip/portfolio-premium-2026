@@ -6,6 +6,7 @@ import {
   requestClientAccess,
   type AccessActionState
 } from "@/app/actions";
+import { ClientPortal } from "@/components/client-portal";
 import { Button } from "@/components/ui/button";
 
 const initialState: AccessActionState = {
@@ -22,7 +23,7 @@ export function ClientAccess() {
   return (
     <section id="contact" className="relative px-5 py-24 sm:px-8 lg:px-10">
       <div className="mx-auto grid max-w-6xl gap-8 rounded-lg border border-white/10 bg-white/[0.045] p-5 shadow-[0_30px_120px_rgba(0,0,0,0.32)] backdrop-blur-2xl md:grid-cols-[0.82fr_1.18fr] md:p-8">
-        <div id="system" className="flex flex-col justify-between gap-10">
+        <div id="system" className="flex flex-col justify-between gap-8">
           <div>
             <p className="text-sm uppercase tracking-[0.24em] text-primary">
               Espace client
@@ -40,13 +41,15 @@ export function ClientAccess() {
           <div className="grid gap-3 text-sm text-muted-foreground">
             <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-background/40 p-4">
               <ShieldCheck aria-hidden="true" className="text-accent" />
-              <span>Neon Auth provisionne pour sessions et JWT.</span>
+              <span>Neon gere les comptes, codes et statuts de tickets.</span>
             </div>
             <div className="rounded-lg border border-white/10 bg-background/40 p-4">
               Cloudinary est prepare avec transformations automatiques
               `f_auto,q_auto`.
             </div>
           </div>
+
+          <ClientPortal />
         </div>
 
         <form action={formAction} className="grid gap-4" data-lenis-prevent>
