@@ -3,10 +3,23 @@
 import { createHash, randomBytes } from "crypto";
 import { revalidatePath } from "next/cache";
 import { getSql } from "@/lib/db";
+import { sendTicketNotification } from "@/lib/sendgrid";
 
 export type AccessActionState = {
   status: "idle" | "success" | "error";
   message: string;
+  ticketId?: string;
+  notificationStatus?: "sent" | "skipped" | "failed";
+};
+
+type AccountRow = {
+  id: string;
+};
+
+type TicketRow = {
+  id: string;
+  priority: string;
+  created_at: string;
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -41,22 +54,27 @@ export async function requestClientAccess(
   const verificationToken = randomBytes(24).toString("hex");
   const tokenHash = createHash("sha256").update(verificationToken).digest("hex");
 
-  await sql`
+  const accountRows = (await sql`
     INSERT INTO client_accounts (email, full_name, company)
     VALUES (${email}, ${name}, ${company || null})
     ON CONFLICT (email) DO UPDATE SET
       full_name = EXCLUDED.full_name,
       company = EXCLUDED.company,
       updated_at = now()
-  `;
+    RETURNING id
+  `) as AccountRow[];
+
+  const accountId = accountRows[0]?.id ?? null;
 
   await sql`
     INSERT INTO account_verifications (email, token_hash, expires_at)
     VALUES (${email}, ${tokenHash}, now() + interval '30 minutes')
   `;
 
-  await sql`
+  const priority = budgetRange.includes("100") ? "high" : "normal";
+  const ticketRows = (await sql`
     INSERT INTO contact_tickets (
+      account_id,
       name,
       email,
       company,
@@ -66,13 +84,54 @@ export async function requestClientAccess(
       priority
     )
     VALUES (
+      ${accountId},
       ${name},
       ${email},
       ${company || null},
       ${projectType},
       ${budgetRange || null},
       ${message},
-      ${budgetRange.includes("100") ? "high" : "normal"}
+      ${priority}
+    )
+    RETURNING id, priority, created_at
+  `) as TicketRow[];
+
+  const ticket = ticketRows[0];
+
+  await sql`
+    INSERT INTO contact_ticket_events (ticket_id, event_type, metadata)
+    VALUES (
+      ${ticket.id},
+      'ticket_created',
+      ${JSON.stringify({ source: "portfolio", priority })}::jsonb
+    )
+  `;
+
+  const notification = await sendTicketNotification({
+    budgetRange,
+    company,
+    email,
+    message,
+    name,
+    priority: ticket.priority,
+    projectType,
+    ticketCreatedAt: ticket.created_at,
+    ticketId: ticket.id
+  });
+
+  await sql`
+    INSERT INTO contact_ticket_events (ticket_id, event_type, metadata)
+    VALUES (
+      ${ticket.id},
+      ${notification.status === "sent"
+        ? "notification_sent"
+        : notification.status === "skipped"
+          ? "notification_skipped"
+          : "notification_failed"},
+      ${JSON.stringify({
+        provider: "sendgrid",
+        detail: notification.detail ?? null
+      })}::jsonb
     )
   `;
 
@@ -80,6 +139,11 @@ export async function requestClientAccess(
 
   return {
     status: "success",
-    message: "Ticket cree. Une validation client Neon est en attente pour securiser le suivi."
+    ticketId: ticket.id,
+    notificationStatus: notification.status,
+    message:
+      notification.status === "sent"
+        ? "Ticket cree. Notification envoyee et validation client Neon en attente."
+        : "Ticket cree dans Neon. Ajoutez les variables SendGrid sur Vercel pour activer la notification immediate."
   };
 }
