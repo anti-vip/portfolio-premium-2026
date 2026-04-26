@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import { ProjectDetailHero } from "@/components/project-detail-hero";
 import { SiteNav } from "@/components/site-nav";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   getFeaturedProjects,
   getProjectBySlug,
@@ -102,12 +99,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </dl>
             </div>
 
-            <Button asChild variant="secondary" className="w-full">
-              <Link href="/#contact">
-                Ouvrir un ticket projet
-                <ArrowUpRight aria-hidden="true" />
-              </Link>
-            </Button>
+            <Link
+              href="/#contact"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-border bg-white/[0.04] px-5 text-sm font-semibold text-foreground backdrop-blur-xl transition-colors hover:bg-white/[0.08]"
+            >
+              Ouvrir un ticket projet
+            </Link>
           </aside>
 
           <article className="space-y-12">
@@ -159,9 +156,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
             <div className="flex flex-wrap gap-2">
               {project.services.map((service) => (
-                <Badge key={service} variant="outline">
+                <span
+                  key={service}
+                  className="inline-flex items-center rounded-md border border-border px-2.5 py-1 text-xs font-medium text-foreground"
+                >
                   {service}
-                </Badge>
+                </span>
               ))}
             </div>
 
@@ -178,8 +178,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     {nextProject.title}
                   </h2>
                   <span className="inline-flex min-h-11 items-center text-sm font-medium text-primary group-hover:underline">
-                    Ouvrir
-                    <ArrowUpRight aria-hidden="true" className="ml-2 size-4" />
+                    Ouvrir le projet
                   </span>
                 </div>
               </Link>
