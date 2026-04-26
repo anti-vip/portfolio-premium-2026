@@ -106,6 +106,10 @@ function getFallbackProjects() {
   return fallbackProjects.map(mapFallbackProject);
 }
 
+function getFallbackProjectBySlug(slug: string) {
+  return getFallbackProjects().find((project) => project.slug === slug) ?? null;
+}
+
 export async function getFeaturedProjects(): Promise<Project[]> {
   const sql = getSql();
 
@@ -146,7 +150,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   const sql = getSql();
 
   if (!sql) {
-    return getFallbackProjects().find((project) => project.slug === slug) ?? null;
+    return getFallbackProjectBySlug(slug);
   }
 
   try {
@@ -167,9 +171,9 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
       LIMIT 1
     `) as ProjectRow[];
 
-    return rows[0] ? mapProject(rows[0]) : null;
+    return rows[0] ? mapProject(rows[0]) : getFallbackProjectBySlug(slug);
   } catch {
-    return getFallbackProjects().find((project) => project.slug === slug) ?? null;
+    return getFallbackProjectBySlug(slug);
   }
 }
 
