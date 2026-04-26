@@ -10,7 +10,12 @@ type TicketNotificationInput = {
   ticketId: string;
 };
 
-type TicketNotificationResult = {
+type AccessCodeEmailInput = {
+  code: string;
+  email: string;
+};
+
+type EmailDeliveryResult = {
   status: "sent" | "skipped" | "failed";
   detail?: string;
 };
@@ -81,9 +86,32 @@ function ticketHtml(input: TicketNotificationInput) {
   `;
 }
 
+function accessCodeText(input: AccessCodeEmailInput) {
+  return [
+    "Code d'acces Portfolio Premium 2026",
+    "",
+    `Code: ${input.code}`,
+    "",
+    "Ce code expire dans 15 minutes."
+  ].join("\n");
+}
+
+function accessCodeHtml(input: AccessCodeEmailInput) {
+  return `
+    <div style="background:#050507;color:#f7f2ea;font-family:Inter,Arial,sans-serif;padding:32px">
+      <div style="max-width:520px;margin:0 auto;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:#0c0d12;padding:28px">
+        <p style="margin:0 0 10px;color:#f5dfb2;letter-spacing:.18em;text-transform:uppercase;font-size:12px">Espace Client</p>
+        <h1 style="margin:0 0 18px;font-size:28px;line-height:1.08">Votre code d'acces</h1>
+        <div style="border:1px solid rgba(245,223,178,.28);border-radius:12px;background:rgba(245,223,178,.08);padding:22px;text-align:center;font-size:38px;letter-spacing:.24em;color:#f5dfb2">${escapeHtml(input.code)}</div>
+        <p style="margin:18px 0 0;color:#a7a29a;line-height:1.6">Ce code expire dans 15 minutes. Si vous n'avez pas demande cet acces, vous pouvez ignorer cet email.</p>
+      </div>
+    </div>
+  `;
+}
+
 export async function sendTicketNotification(
   input: TicketNotificationInput
-): Promise<TicketNotificationResult> {
+): Promise<EmailDeliveryResult> {
   const apiKey = process.env.SENDGRID_API_KEY;
   const fromEmail = process.env.SENDGRID_FROM_EMAIL;
   const fromName = process.env.SENDGRID_FROM_NAME ?? "Portfolio Premium 2026";
@@ -127,6 +155,67 @@ export async function sendTicketNotification(
           {
             type: "text/html",
             value: ticketHtml(input)
+          }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      return {
+        status: "failed",
+        detail: `SendGrid responded with ${response.status}`
+      };
+    }
+
+    return { status: "sent" };
+  } catch (error) {
+    return {
+      status: "failed",
+      detail: error instanceof Error ? error.message : "Unknown SendGrid error"
+    };
+  }
+}
+
+export async function sendAccessCodeEmail(
+  input: AccessCodeEmailInput
+): Promise<EmailDeliveryResult> {
+  const apiKey = process.env.SENDGRID_API_KEY;
+  const fromEmail = process.env.SENDGRID_FROM_EMAIL;
+  const fromName = process.env.SENDGRID_FROM_NAME ?? "Portfolio Premium 2026";
+
+  if (!apiKey || !fromEmail) {
+    return {
+      status: "skipped",
+      detail: "Missing SENDGRID_API_KEY or SENDGRID_FROM_EMAIL"
+    };
+  }
+
+  try {
+    const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        personalizations: [
+          {
+            to: [{ email: input.email }],
+            subject: "Votre code d'acces Portfolio Premium 2026"
+          }
+        ],
+        from: {
+          email: fromEmail,
+          name: fromName
+        },
+        content: [
+          {
+            type: "text/plain",
+            value: accessCodeText(input)
+          },
+          {
+            type: "text/html",
+            value: accessCodeHtml(input)
           }
         ]
       })
