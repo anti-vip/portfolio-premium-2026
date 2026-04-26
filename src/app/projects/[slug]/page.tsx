@@ -3,14 +3,13 @@ import Link from "next/link";
 import { SiteNav } from "@/components/site-nav";
 
 type ProjectPageProps = {
-  params: Promise<{
+  params: {
     slug: string;
-  }>;
+  };
 };
 
-export default async function ProjectPage({ params }: ProjectPageProps) {
-  const { slug } = await params;
-  const title = slug
+export default function ProjectPage({ params }: ProjectPageProps) {
+  const title = params.slug
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
