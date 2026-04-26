@@ -1,6 +1,4 @@
-import Link from "next/link";
-
-import { Badge } from "@/components/ui/badge";
+import { ProjectCard } from "@/components/project-card";
 import type { Project } from "@/lib/projects";
 
 type ProjectBentoProps = {
@@ -21,16 +19,6 @@ const bentoSlots = [
   "md:col-span-3",
   "md:col-span-2"
 ];
-
-const statusLabels: Record<string, string> = {
-  live: "Live",
-  prototype: "Prototype",
-  concept: "Concept"
-};
-
-function formatProjectStatus(status: string) {
-  return statusLabels[status.toLowerCase()] ?? status;
-}
 
 export function ProjectBento({ projects }: ProjectBentoProps) {
   const liveProjects = projects.filter(
@@ -70,74 +58,19 @@ export function ProjectBento({ projects }: ProjectBentoProps) {
 
         <div className="grid auto-rows-[minmax(260px,auto)] gap-4 md:grid-cols-6">
           {projects.map((project, index) => {
-            const featured = index === 0;
             const imageLayer = project.imageUrl
               ? `linear-gradient(180deg, rgba(5,5,7,0.12), rgba(5,5,7,0.82)), url(${project.imageUrl})`
               : gradients[index % gradients.length];
 
             return (
-              <Link
+              <ProjectCard
                 key={project.id}
-                href={`/projects/${project.slug}`}
-                className={[
-                  "group relative block min-h-[260px] overflow-hidden rounded-lg border border-white/10 bg-card p-5 shadow-[0_24px_90px_rgba(0,0,0,0.28)]",
-                  "transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_34px_120px_rgba(245,223,178,0.12)]",
-                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                  bentoSlots[index % bentoSlots.length]
-                ].join(" ")}
-                aria-label={`Ouvrir le projet ${project.title}`}
-              >
-                <div
-                  className="absolute inset-0 scale-100 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
-                  style={{ backgroundImage: imageLayer }}
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-80"
-                  aria-hidden="true"
-                />
-                <div className="absolute inset-x-5 top-5 flex items-center justify-between">
-                  <Badge>{formatProjectStatus(project.status)}</Badge>
-                  <span className="font-display text-sm text-primary/80">
-                    0{index + 1}
-                  </span>
-                </div>
-                <div className="absolute right-5 top-16 translate-y-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-medium text-primary opacity-0 backdrop-blur-xl transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                  Selection premium
-                </div>
-
-                <div className="relative z-10 flex h-full flex-col justify-end gap-5 pt-24">
-                  <div>
-                    <p className="mb-3 text-xs uppercase tracking-[0.22em] text-primary/80">
-                      {project.coverPublicId ? "Cloudinary-ready media" : "Generated visual system"}
-                    </p>
-                    <h3
-                      className={[
-                        "font-display font-semibold leading-tight text-foreground",
-                        featured ? "text-4xl sm:text-6xl" : "text-3xl sm:text-4xl"
-                      ].join(" ")}
-                    >
-                      {project.title}
-                    </h3>
-                    <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">
-                      {project.summary}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                    <div className="flex flex-wrap gap-2">
-                      {project.services.map((service) => (
-                        <Badge key={service} variant="outline">
-                          {service}
-                        </Badge>
-                      ))}
-                    </div>
-                    <span className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 transition-colors group-hover:text-foreground group-hover:underline">
-                      Voir le projet
-                    </span>
-                  </div>
-                </div>
-              </Link>
+                featured={index === 0}
+                imageLayer={imageLayer}
+                index={index}
+                project={project}
+                slotClassName={bentoSlots[index % bentoSlots.length]}
+              />
             );
           })}
         </div>
