@@ -17,11 +17,10 @@ export default function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background:
-            "radial-gradient(circle at 22% 12%, rgba(245,223,178,0.24), transparent 34%), radial-gradient(circle at 82% 20%, rgba(182,242,222,0.2), transparent 30%), #050507",
+          backgroundColor: "#050507",
           color: "#f7f2ea",
           padding: 72,
-          fontFamily: "Inter, Arial, sans-serif"
+          fontFamily: "Arial, sans-serif"
         }}
       >
         <div
@@ -30,9 +29,7 @@ export default function OpenGraphImage() {
             justifyContent: "space-between",
             alignItems: "center",
             color: "#f5dfb2",
-            fontSize: 24,
-            letterSpacing: "0.2em",
-            textTransform: "uppercase"
+            fontSize: 24
           }}
         >
           <span>Portfolio Premium 2026</span>
@@ -43,10 +40,9 @@ export default function OpenGraphImage() {
           <h1
             style={{
               margin: 0,
-              maxWidth: 960,
-              fontSize: 108,
-              lineHeight: 0.9,
-              letterSpacing: "-0.02em",
+              maxWidth: 980,
+              fontSize: 104,
+              lineHeight: 0.94,
               fontWeight: 700
             }}
           >
@@ -55,7 +51,7 @@ export default function OpenGraphImage() {
           <p
             style={{
               margin: 0,
-              maxWidth: 780,
+              maxWidth: 820,
               color: "#a7a29a",
               fontSize: 34,
               lineHeight: 1.35
