@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Badge } from "@/components/ui/badge";
 import type { Project } from "@/lib/projects";
 
@@ -74,7 +76,7 @@ export function ProjectBento({ projects }: ProjectBentoProps) {
               : gradients[index % gradients.length];
 
             return (
-              <a
+              <Link
                 key={project.id}
                 href={`/projects/${project.slug}`}
                 className={[
@@ -83,6 +85,7 @@ export function ProjectBento({ projects }: ProjectBentoProps) {
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                   bentoSlots[index % bentoSlots.length]
                 ].join(" ")}
+                aria-label={`Ouvrir le projet ${project.title}`}
               >
                 <div
                   className="absolute inset-0 scale-100 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
@@ -134,7 +137,7 @@ export function ProjectBento({ projects }: ProjectBentoProps) {
                     </span>
                   </div>
                 </div>
-              </a>
+              </Link>
             );
           })}
         </div>
