@@ -15,13 +15,6 @@ type TicketNotificationResult = {
   detail?: string;
 };
 
-type AccessCodeEmailInput = {
-  code: string;
-  email: string;
-};
-
-type EmailResult = TicketNotificationResult;
-
 function escapeHtml(value: string) {
   return value
     .replace(/&/g, "&amp;")
@@ -88,25 +81,22 @@ function ticketHtml(input: TicketNotificationInput) {
   `;
 }
 
-async function sendEmail({
-  apiKey,
-  fromEmail,
-  fromName,
-  html,
-  replyTo,
-  subject,
-  text,
-  toEmail
-}: {
-  apiKey: string;
-  fromEmail: string;
-  fromName: string;
-  html: string;
-  replyTo?: { email: string; name?: string };
-  subject: string;
-  text: string;
-  toEmail: string;
-}): Promise<EmailResult> {
+export async function sendTicketNotification(
+  input: TicketNotificationInput
+): Promise<TicketNotificationResult> {
+  const apiKey = process.env.SENDGRID_API_KEY;
+  const fromEmail = process.env.SENDGRID_FROM_EMAIL;
+  const fromName = process.env.SENDGRID_FROM_NAME ?? "Portfolio Premium 2026";
+  const toEmail =
+    process.env.CONTACT_NOTIFICATION_EMAIL ?? process.env.SENDGRID_TO_EMAIL;
+
+  if (!apiKey || !fromEmail || !toEmail) {
+    return {
+      status: "skipped",
+      detail: "Missing SENDGRID_API_KEY, SENDGRID_FROM_EMAIL or CONTACT_NOTIFICATION_EMAIL"
+    };
+  }
+
   try {
     const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
       method: "POST",
@@ -118,22 +108,25 @@ async function sendEmail({
         personalizations: [
           {
             to: [{ email: toEmail }],
-            subject
+            subject: `Nouveau ticket premium: ${input.projectType}`
           }
         ],
         from: {
           email: fromEmail,
           name: fromName
         },
-        ...(replyTo ? { reply_to: replyTo } : {}),
+        reply_to: {
+          email: input.email,
+          name: input.name
+        },
         content: [
           {
             type: "text/plain",
-            value: text
+            value: ticketText(input)
           },
           {
             type: "text/html",
-            value: html
+            value: ticketHtml(input)
           }
         ]
       })
@@ -153,76 +146,4 @@ async function sendEmail({
       detail: error instanceof Error ? error.message : "Unknown SendGrid error"
     };
   }
-}
-
-export async function sendAccessCodeEmail({
-  code,
-  email
-}: AccessCodeEmailInput): Promise<EmailResult> {
-  const apiKey = process.env.SENDGRID_API_KEY;
-  const fromEmail = process.env.SENDGRID_FROM_EMAIL;
-  const fromName = process.env.SENDGRID_FROM_NAME ?? "Portfolio Premium 2026";
-
-  if (!apiKey || !fromEmail) {
-    return {
-      status: "skipped",
-      detail: "Missing SENDGRID_API_KEY or SENDGRID_FROM_EMAIL"
-    };
-  }
-
-  return sendEmail({
-    apiKey,
-    fromEmail,
-    fromName,
-    subject: "Votre code espace client Portfolio Premium 2026",
-    text: [
-      "Votre code espace client Portfolio Premium 2026",
-      "",
-      `Code: ${code}`,
-      "",
-      "Il expire dans 15 minutes."
-    ].join("\n"),
-    html: `
-      <div style="background:#050507;color:#f7f2ea;font-family:Inter,Arial,sans-serif;padding:32px">
-        <div style="max-width:560px;margin:0 auto;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:#0c0d12;padding:28px">
-          <p style="margin:0 0 10px;color:#f5dfb2;letter-spacing:.18em;text-transform:uppercase;font-size:12px">Portfolio Premium 2026</p>
-          <h1 style="margin:0 0 18px;font-size:28px;line-height:1.08">Code espace client</h1>
-          <p style="margin:0 0 22px;color:#a7a29a;line-height:1.6">Utilisez ce code pour consulter le statut de vos tickets. Il expire dans 15 minutes.</p>
-          <div style="display:inline-block;border:1px solid rgba(245,223,178,.28);border-radius:12px;background:rgba(245,223,178,.08);padding:14px 18px;color:#f5dfb2;font-size:32px;letter-spacing:.22em;font-weight:700">${escapeHtml(code)}</div>
-        </div>
-      </div>
-    `,
-    toEmail: email
-  });
-}
-
-export async function sendTicketNotification(
-  input: TicketNotificationInput
-): Promise<TicketNotificationResult> {
-  const apiKey = process.env.SENDGRID_API_KEY;
-  const fromEmail = process.env.SENDGRID_FROM_EMAIL;
-  const fromName = process.env.SENDGRID_FROM_NAME ?? "Portfolio Premium 2026";
-  const toEmail =
-    process.env.CONTACT_NOTIFICATION_EMAIL ?? process.env.SENDGRID_TO_EMAIL;
-
-  if (!apiKey || !fromEmail || !toEmail) {
-    return {
-      status: "skipped",
-      detail: "Missing SENDGRID_API_KEY, SENDGRID_FROM_EMAIL or CONTACT_NOTIFICATION_EMAIL"
-    };
-  }
-
-  return sendEmail({
-    apiKey,
-    fromEmail,
-    fromName,
-    html: ticketHtml(input),
-    replyTo: {
-      email: input.email,
-      name: input.name
-    },
-    subject: `Nouveau ticket premium: ${input.projectType}`,
-    text: ticketText(input),
-    toEmail
-  });
 }
