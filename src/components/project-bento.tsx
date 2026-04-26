@@ -94,6 +94,9 @@ export function ProjectBento({ projects }: ProjectBentoProps) {
                     0{index + 1}
                   </span>
                 </div>
+                <div className="absolute right-5 top-16 translate-y-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-medium text-primary opacity-0 backdrop-blur-xl transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                  Selection premium
+                </div>
 
                 <div className="relative z-10 flex h-full flex-col justify-end gap-5 pt-24">
                   <div>
