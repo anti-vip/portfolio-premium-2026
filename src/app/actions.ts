@@ -2,15 +2,9 @@
 
 import { createHash, randomBytes } from "crypto";
 import { revalidatePath } from "next/cache";
+import type { AccessActionState } from "@/lib/contact-types";
 import { getSql } from "@/lib/db";
 import { sendTicketNotification } from "@/lib/sendgrid";
-
-export type AccessActionState = {
-  status: "idle" | "success" | "error";
-  message: string;
-  ticketId?: string;
-  notificationStatus?: "sent" | "skipped" | "failed";
-};
 
 type AccountRow = {
   id: string;
@@ -19,7 +13,7 @@ type AccountRow = {
 type TicketRow = {
   id: string;
   priority: string;
-  created_at: string;
+  created_at: string | Date;
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -98,6 +92,18 @@ export async function requestClientAccess(
 
   const ticket = ticketRows[0];
 
+  if (!ticket) {
+    return {
+      status: "error",
+      message: "Impossible de creer le ticket Neon. Reessayez dans un instant."
+    };
+  }
+
+  const ticketCreatedAt =
+    ticket.created_at instanceof Date
+      ? ticket.created_at.toISOString()
+      : ticket.created_at;
+
   await sql`
     INSERT INTO contact_ticket_events (ticket_id, event_type, metadata)
     VALUES (
@@ -115,7 +121,7 @@ export async function requestClientAccess(
     name,
     priority: ticket.priority,
     projectType,
-    ticketCreatedAt: ticket.created_at,
+    ticketCreatedAt,
     ticketId: ticket.id
   });
 
