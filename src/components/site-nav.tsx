@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
@@ -14,26 +13,35 @@ const navItems = [
 export function SiteNav() {
   const [isVisible, setIsVisible] = useState(true);
   const previousScroll = useRef(0);
-  const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = previousScroll.current;
-    previousScroll.current = latest;
+  useEffect(() => {
+    const onScroll = () => {
+      const latest = window.scrollY;
+      const previous = previousScroll.current;
+      previousScroll.current = latest;
 
-    if (latest < 64) {
-      setIsVisible(true);
-      return;
-    }
+      if (latest < 64) {
+        setIsVisible(true);
+        return;
+      }
 
-    setIsVisible(latest < previous);
-  });
+      setIsVisible(latest < previous);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <motion.header
-      initial={false}
-      animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: -88 }}
-      transition={{ duration: 0.34, ease: "easeOut" }}
-      className="fixed inset-x-0 top-4 z-50 px-4 sm:px-6"
+    <header
+      className={[
+        "fixed inset-x-0 top-4 z-50 px-4 transition-all duration-300 ease-out sm:px-6",
+        isVisible
+          ? "translate-y-0 opacity-100"
+          : "-translate-y-20 opacity-0"
+      ].join(" ")}
     >
       <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full border border-white/10 bg-background/50 px-3 shadow-[0_18px_70px_rgba(0,0,0,0.34)] backdrop-blur-2xl">
         <a href="#" className="flex items-center gap-3 px-2">
@@ -64,6 +72,6 @@ export function SiteNav() {
           </a>
         </Button>
       </nav>
-    </motion.header>
+    </header>
   );
 }
