@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ShieldCheck } from "lucide-react";
 
 type ContactSuccessProps = {
@@ -13,12 +12,7 @@ export function ContactSuccess({
   notificationStatus
 }: ContactSuccessProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.42 }}
-      className="relative overflow-hidden rounded-lg border border-accent/25 bg-accent/10 p-4 text-sm text-foreground shadow-[0_18px_70px_rgba(182,242,222,0.08)]"
-    >
+    <div className="client-success-reveal relative overflow-hidden rounded-lg border border-accent/25 bg-accent/10 p-4 text-sm text-foreground shadow-[0_18px_70px_rgba(182,242,222,0.08)]">
       <div
         className="absolute inset-0"
         style={{
@@ -44,6 +38,6 @@ export function ContactSuccess({
           ) : null}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
