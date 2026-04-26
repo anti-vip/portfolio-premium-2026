@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import { ShieldCheck } from "lucide-react";
+import { motion, type Transition, type Variants } from "framer-motion";
+import { CheckCircle2, MailCheck, ShieldCheck } from "lucide-react";
 import {
   requestClientAccess,
   type AccessActionState
@@ -12,6 +13,13 @@ const initialState: AccessActionState = {
   status: "idle",
   message: ""
 };
+
+const successMotion: Variants = {
+  hidden: { opacity: 0, y: 12, filter: "blur(8px)" },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)" }
+};
+
+const successTransition: Transition = { duration: 0.42, ease: "easeOut" };
 
 export function ClientAccess() {
   const [state, formAction, isPending] = useActionState(
@@ -116,16 +124,56 @@ export function ClientAccess() {
             />
           </label>
 
+          {state.status === "success" ? (
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={successMotion}
+              transition={successTransition}
+              className="relative overflow-hidden rounded-lg border border-accent/25 bg-accent/10 p-4 text-sm text-foreground shadow-[0_18px_70px_rgba(182,242,222,0.08)]"
+            >
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(circle at 10% 0%, rgba(182,242,222,0.22), transparent 32%)"
+                }}
+                aria-hidden="true"
+              />
+              <div className="relative flex items-start gap-3">
+                <span className="grid size-9 shrink-0 place-items-center rounded-full border border-accent/30 bg-accent/15 text-accent">
+                  <CheckCircle2 aria-hidden="true" className="size-5" />
+                </span>
+                <div>
+                  <p className="font-medium text-foreground">
+                    Demande securisee dans l'espace client.
+                  </p>
+                  <p className="mt-1 leading-6 text-muted-foreground">
+                    {state.message}
+                  </p>
+                  {state.notificationStatus === "sent" ? (
+                    <p className="mt-3 inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-accent">
+                      <MailCheck aria-hidden="true" className="size-4" />
+                      Notification SendGrid envoyee
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            </motion.div>
+          ) : null}
+
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p
               aria-live="polite"
               className={
-                state.status === "success"
-                  ? "text-sm text-accent"
+                state.status === "error"
+                  ? "text-sm text-destructive"
                   : "text-sm text-muted-foreground"
               }
             >
-              {state.message || "Les tickets sont stockes dans Neon Postgres."}
+              {state.status === "success"
+                ? "Reference ticket prete pour le suivi confidentiel."
+                : state.message || "Les tickets sont stockes dans Neon Postgres."}
             </p>
             <Button type="submit" disabled={isPending} className="shrink-0">
               {isPending ? "Transmission..." : "Creer le ticket"}
