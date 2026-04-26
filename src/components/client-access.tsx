@@ -116,29 +116,16 @@ export function ClientAccess() {
             />
           </label>
 
-          {state.status === "success" ? (
-            <div className="client-success-reveal rounded-lg border border-accent/25 bg-accent/10 p-4 text-sm text-foreground shadow-[0_18px_70px_rgba(182,242,222,0.08)]">
-              <p className="font-medium text-foreground">
-                Demande securisee dans l'espace client.
-              </p>
-              <p className="mt-1 leading-6 text-muted-foreground">
-                {state.message}
-              </p>
-            </div>
-          ) : null}
-
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p
               aria-live="polite"
               className={
-                state.status === "error"
-                  ? "text-sm text-destructive"
+                state.status === "success"
+                  ? "text-sm text-accent"
                   : "text-sm text-muted-foreground"
               }
             >
-              {state.status === "success"
-                ? "Reference ticket prete pour le suivi confidentiel."
-                : state.message || "Les tickets sont stockes dans Neon Postgres."}
+              {state.message || "Les tickets sont stockes dans Neon Postgres."}
             </p>
             <Button type="submit" disabled={isPending} className="shrink-0">
               {isPending ? "Transmission..." : "Creer le ticket"}
