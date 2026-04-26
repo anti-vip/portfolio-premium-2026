@@ -121,7 +121,7 @@ export function ClientAccess() {
               aria-live="polite"
               className={
                 state.status === "success"
-                  ? "text-sm text-accent"
+                  ? "client-success-reveal text-sm text-accent"
                   : "text-sm text-muted-foreground"
               }
             >
