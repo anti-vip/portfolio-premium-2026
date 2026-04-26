@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -13,10 +13,12 @@ const navItems = [
 
 export function SiteNav() {
   const [isVisible, setIsVisible] = useState(true);
+  const previousScroll = useRef(0);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = scrollY.getPrevious() ?? 0;
+    const previous = previousScroll.current;
+    previousScroll.current = latest;
 
     if (latest < 64) {
       setIsVisible(true);
