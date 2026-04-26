@@ -6,7 +6,6 @@ import {
   requestClientAccess,
   type AccessActionState
 } from "@/app/actions";
-import { ClientPortal } from "@/components/client-portal";
 import { Button } from "@/components/ui/button";
 
 const initialState: AccessActionState = {
@@ -48,8 +47,6 @@ export function ClientAccess() {
               `f_auto,q_auto`.
             </div>
           </div>
-
-          <ClientPortal />
         </div>
 
         <form action={formAction} className="grid gap-4" data-lenis-prevent>
