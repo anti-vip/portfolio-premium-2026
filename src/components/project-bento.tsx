@@ -78,21 +78,25 @@ export function ProjectBento({ projects }: ProjectBentoProps) {
                 key={project.id}
                 className={[
                   "group relative overflow-hidden rounded-lg border border-white/10 bg-card p-5 shadow-[0_24px_90px_rgba(0,0,0,0.28)]",
-                  "transition-[border-color,box-shadow,transform] duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_34px_120px_rgba(245,223,178,0.12)]",
+                  "transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_34px_120px_rgba(245,223,178,0.12)]",
                   bentoSlots[index % bentoSlots.length]
                 ].join(" ")}
               >
                 <div
-                  className="absolute inset-0 scale-100 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-[1.045]"
+                  className="absolute inset-0 scale-100 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
                   style={{ backgroundImage: imageLayer }}
                   aria-hidden="true"
                 />
                 <div
-                  className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-[0.9] transition-opacity duration-500 group-hover:opacity-[0.82]"
+                  className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-80"
                   aria-hidden="true"
                 />
                 <div
-                  className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(245,223,178,0.2),transparent_26%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                  className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 20% 10%, rgba(245,223,178,0.2), transparent 26%)"
+                  }}
                   aria-hidden="true"
                 />
                 <div className="absolute inset-x-5 top-5 flex items-center justify-between">
