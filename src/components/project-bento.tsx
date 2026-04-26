@@ -78,35 +78,21 @@ export function ProjectBento({ projects }: ProjectBentoProps) {
                 key={project.id}
                 className={[
                   "group relative overflow-hidden rounded-lg border border-white/10 bg-card p-5 shadow-[0_24px_90px_rgba(0,0,0,0.28)]",
-                  "transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_34px_120px_rgba(245,223,178,0.12)]",
+                  "transition-transform duration-500 hover:-translate-y-1",
                   bentoSlots[index % bentoSlots.length]
                 ].join(" ")}
+                style={{
+                  backgroundImage: imageLayer,
+                  backgroundPosition: "center",
+                  backgroundSize: "cover"
+                }}
               >
-                <div
-                  className="absolute inset-0 scale-100 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
-                  style={{ backgroundImage: imageLayer }}
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-80"
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 20% 10%, rgba(245,223,178,0.2), transparent 26%)"
-                  }}
-                  aria-hidden="true"
-                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-[0.88]" />
                 <div className="absolute inset-x-5 top-5 flex items-center justify-between">
                   <Badge>{formatProjectStatus(project.status)}</Badge>
                   <span className="font-display text-sm text-primary/80">
                     0{index + 1}
                   </span>
-                </div>
-                <div className="absolute right-5 top-16 translate-y-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-medium text-primary opacity-0 backdrop-blur-xl transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                  Selection premium
                 </div>
 
                 <div className="relative z-10 flex h-full flex-col justify-end gap-5 pt-24">
