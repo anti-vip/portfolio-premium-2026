@@ -15,6 +15,12 @@ export type Project = {
   imageUrl: string | null;
 };
 
+const projectImageOptions = {
+  width: 1600,
+  height: 1000,
+  crop: "fill" as const
+};
+
 const fallbackProjects: Project[] = [
   {
     id: "maison-aurora",
@@ -73,11 +79,38 @@ type ProjectRow = {
   cover_public_id: string | null;
 };
 
+function mapProject(project: ProjectRow): Project {
+  return {
+    id: project.id,
+    slug: project.slug,
+    title: project.title,
+    summary: project.summary,
+    services: project.services ?? [],
+    status: project.status,
+    featured: project.featured,
+    sortOrder: project.sort_order,
+    publishedAt: project.published_at,
+    coverPublicId: project.cover_public_id,
+    imageUrl: cloudinaryImageUrl(project.cover_public_id, projectImageOptions)
+  };
+}
+
+function mapFallbackProject(project: Project): Project {
+  return {
+    ...project,
+    imageUrl: cloudinaryImageUrl(project.coverPublicId, projectImageOptions)
+  };
+}
+
+function getFallbackProjects() {
+  return fallbackProjects.map(mapFallbackProject);
+}
+
 export async function getFeaturedProjects(): Promise<Project[]> {
   const sql = getSql();
 
   if (!sql) {
-    return fallbackProjects;
+    return getFallbackProjects();
   }
 
   try {
@@ -100,27 +133,64 @@ export async function getFeaturedProjects(): Promise<Project[]> {
     `) as ProjectRow[];
 
     if (!rows.length) {
-      return fallbackProjects;
+      return getFallbackProjects();
     }
 
-    return rows.map((project) => ({
-      id: project.id,
-      slug: project.slug,
-      title: project.title,
-      summary: project.summary,
-      services: project.services ?? [],
-      status: project.status,
-      featured: project.featured,
-      sortOrder: project.sort_order,
-      publishedAt: project.published_at,
-      coverPublicId: project.cover_public_id,
-      imageUrl: cloudinaryImageUrl(project.cover_public_id, {
-        width: 1400,
-        height: 900,
-        crop: "fill"
-      })
-    }));
+    return rows.map(mapProject);
   } catch {
-    return fallbackProjects;
+    return getFallbackProjects();
+  }
+}
+
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  const sql = getSql();
+
+  if (!sql) {
+    return getFallbackProjects().find((project) => project.slug === slug) ?? null;
+  }
+
+  try {
+    const rows = (await sql`
+      SELECT
+        id,
+        slug,
+        title,
+        summary,
+        services,
+        status,
+        featured,
+        sort_order,
+        published_at,
+        cover_public_id
+      FROM projects
+      WHERE slug = ${slug}
+      LIMIT 1
+    `) as ProjectRow[];
+
+    return rows[0] ? mapProject(rows[0]) : null;
+  } catch {
+    return getFallbackProjects().find((project) => project.slug === slug) ?? null;
+  }
+}
+
+export async function getProjectSlugs(): Promise<string[]> {
+  const sql = getSql();
+
+  if (!sql) {
+    return fallbackProjects.map((project) => project.slug);
+  }
+
+  try {
+    const rows = (await sql`
+      SELECT slug
+      FROM projects
+      ORDER BY sort_order ASC, published_at DESC NULLS LAST
+    `) as Pick<ProjectRow, "slug">[];
+
+    return rows.length
+      ? rows.map((project) => project.slug)
+      : fallbackProjects.map((project) => project.slug);
+  } catch {
+    return fallbackProjects.map((project) => project.slug);
   }
 }
