@@ -17,10 +17,10 @@ export const buttonVariants = cva(
           "border border-border bg-transparent text-foreground hover:bg-white/[0.05]"
       },
       size: {
-        default: "h-11 px-5 py-2",
-        sm: "h-9 px-4",
+        default: "min-h-11 px-5 py-2",
+        sm: "min-h-11 px-4",
         lg: "h-12 px-7 text-base",
-        icon: "size-10"
+        icon: "size-11"
       }
     },
     defaultVariants: {
