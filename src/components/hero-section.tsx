@@ -21,7 +21,7 @@ const revealItem = {
   visible: {
     y: "0%",
     opacity: 1,
-    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.9, ease: "easeOut" }
   }
 };
 
@@ -92,7 +92,7 @@ export function HeroSection() {
         <motion.aside
           initial={{ opacity: 0, y: 28, filter: "blur(12px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 1.1, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 1.1, delay: 0.65, ease: "easeOut" }}
           className="mb-1 hidden overflow-hidden rounded-lg border border-white/10 bg-white/[0.055] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.42)] backdrop-blur-2xl lg:block"
         >
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
