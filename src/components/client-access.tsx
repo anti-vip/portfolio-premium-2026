@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { motion, type Transition, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { CheckCircle2, MailCheck, ShieldCheck } from "lucide-react";
 import {
   requestClientAccess,
@@ -13,13 +13,6 @@ const initialState: AccessActionState = {
   status: "idle",
   message: ""
 };
-
-const successMotion: Variants = {
-  hidden: { opacity: 0, y: 12, filter: "blur(8px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)" }
-};
-
-const successTransition: Transition = { duration: 0.42, ease: "easeOut" };
 
 export function ClientAccess() {
   const [state, formAction, isPending] = useActionState(
@@ -126,10 +119,9 @@ export function ClientAccess() {
 
           {state.status === "success" ? (
             <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={successMotion}
-              transition={successTransition}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.42, ease: "easeOut" }}
               className="relative overflow-hidden rounded-lg border border-accent/25 bg-accent/10 p-4 text-sm text-foreground shadow-[0_18px_70px_rgba(182,242,222,0.08)]"
             >
               <div
