@@ -50,7 +50,7 @@ export function HeroSection() {
             Senior Creative Developer / Luxury Digital
           </motion.div>
 
-          <h1 className="max-w-5xl font-display text-[clamp(4rem,12vw,9.8rem)] font-semibold leading-[0.82] tracking-normal text-foreground">
+          <h1 className="max-w-5xl font-display text-[clamp(3.35rem,15vw,9.8rem)] font-semibold leading-[0.86] tracking-normal text-foreground">
             <span className="block overflow-hidden pb-3">
               <motion.span variants={revealItem} className="block">
                 Portfolio
