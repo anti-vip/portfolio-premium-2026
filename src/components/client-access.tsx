@@ -3,11 +3,9 @@
 import { useActionState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, MailCheck, ShieldCheck } from "lucide-react";
-import {
-  requestClientAccess,
-  type AccessActionState
-} from "@/app/actions";
+import { requestClientAccess } from "@/app/actions";
 import { Button } from "@/components/ui/button";
+import type { AccessActionState } from "@/lib/contact-types";
 
 const initialState: AccessActionState = {
   status: "idle",
