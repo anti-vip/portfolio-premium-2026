@@ -11,10 +11,11 @@ Ultra-premium digital portfolio built with Next.js 15, Tailwind CSS, shadcn-styl
 - Lenis smooth scroll
 - Neon Postgres for projects, client accounts, validations, and contact tickets
 - Cloudinary URL helper with `f_auto` and `q_auto`
+- SendGrid notification hook for new private tickets
 
 ## Environment
 
-Copy `.env.example` to `.env.local` and fill the values from Neon, Neon Auth, Cloudinary, and Vercel.
+Copy `.env.example` to `.env.local` and fill the values from Neon, Neon Auth, Cloudinary, Vercel, and SendGrid.
 
 ```bash
 npm install
