@@ -1,12 +1,12 @@
 "use client";
 
 import { ArrowDown, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/magnetic-button";
 import { ShaderBackground } from "@/components/shader-background";
 
-const revealContainer = {
+const revealContainer: Variants = {
   hidden: {},
   visible: {
     transition: {
@@ -16,7 +16,7 @@ const revealContainer = {
   }
 };
 
-const revealItem = {
+const revealItem: Variants = {
   hidden: { y: "110%", opacity: 0 },
   visible: {
     y: "0%",
