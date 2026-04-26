@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ProjectDetailHero } from "@/components/project-detail-hero";
 import { SiteNav } from "@/components/site-nav";
 import {
   getFeaturedProjects,
@@ -37,21 +36,7 @@ export async function generateMetadata({
 
   return {
     title: project.title,
-    description: project.summary,
-    openGraph: {
-      title: project.title,
-      description: project.summary,
-      images: project.imageUrl
-        ? [
-            {
-              url: project.imageUrl,
-              width: 1600,
-              height: 1000,
-              alt: project.title
-            }
-          ]
-        : undefined
-    }
+    description: project.summary
   };
 }
 
@@ -66,11 +51,67 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const projects = await getFeaturedProjects();
   const nextProject =
     projects.find((candidate) => candidate.slug !== project.slug) ?? null;
+  const imageLayer = project.imageUrl
+    ? `linear-gradient(180deg, rgba(5,5,7,0.08), rgba(5,5,7,0.86)), url(${project.imageUrl})`
+    : "radial-gradient(circle at 20% 18%, rgba(245,223,178,0.32), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))";
 
   return (
     <main className="relative min-h-screen overflow-hidden">
       <SiteNav />
-      <ProjectDetailHero project={project} />
+
+      <section className="relative min-h-[92svh] overflow-hidden px-5 pb-10 pt-28 sm:px-8 sm:pb-12 lg:px-10">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: imageLayer }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-background via-background/70 to-transparent"
+          aria-hidden="true"
+        />
+        <div className="relative z-10 mx-auto flex min-h-[calc(92svh-9rem)] max-w-6xl flex-col justify-between">
+          <Link
+            href="/#projects"
+            className="inline-flex min-h-11 w-fit items-center justify-center rounded-full border border-border bg-white/[0.04] px-5 text-sm font-semibold text-foreground backdrop-blur-xl transition-colors hover:bg-white/[0.08]"
+          >
+            Retour aux projets
+          </Link>
+          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+            <div>
+              <div className="mb-5 flex flex-wrap gap-2">
+                <span className="inline-flex items-center rounded-md bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground">
+                  {project.status}
+                </span>
+                {project.services.slice(0, 3).map((service) => (
+                  <span
+                    key={service}
+                    className="inline-flex items-center rounded-md border border-border px-2.5 py-1 text-xs font-medium text-foreground"
+                  >
+                    {service}
+                  </span>
+                ))}
+              </div>
+              <h1 className="max-w-5xl font-display text-[clamp(3.25rem,13vw,9.2rem)] font-semibold leading-[0.86] tracking-normal text-foreground">
+                {project.title}
+              </h1>
+            </div>
+            <div className="rounded-lg border border-white/10 bg-background/50 p-5 backdrop-blur-2xl sm:p-6">
+              <p className="text-sm uppercase tracking-[0.22em] text-primary">
+                Case study
+              </p>
+              <p className="mt-4 text-base leading-7 text-muted-foreground sm:text-lg">
+                {project.summary}
+              </p>
+              <Link
+                href="/#contact"
+                className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                Lancer un brief similaire
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="px-5 py-20 sm:px-8 sm:py-24 lg:px-10">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.76fr_1.24fr]">
