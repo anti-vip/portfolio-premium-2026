@@ -108,3 +108,21 @@ select {
   background-size: 72px 72px;
   mask-image: linear-gradient(to bottom, black 0%, black 56%, transparent 100%);
 }
+
+@keyframes client-success-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.client-success-reveal {
+  animation: client-success-reveal 420ms ease-out both;
+}
