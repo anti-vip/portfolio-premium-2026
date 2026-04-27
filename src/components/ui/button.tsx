@@ -4,17 +4,17 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-[background,border-color,color,box-shadow,transform] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-[background,border-color,color,transform] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-[0_18px_60px_rgba(245,223,178,0.2)] hover:bg-primary/90",
+          "bg-primary text-primary-foreground hover:bg-primary/90",
         secondary:
-          "border border-border bg-white/[0.04] text-foreground backdrop-blur-xl hover:bg-white/[0.08]",
+          "border border-white/5 bg-white/[0.04] text-foreground backdrop-blur-xl hover:bg-white/[0.08]",
         ghost: "text-foreground hover:bg-white/[0.06]",
         outline:
-          "border border-border bg-transparent text-foreground hover:bg-white/[0.05]"
+          "border border-white/5 bg-transparent text-foreground hover:bg-white/[0.05]"
       },
       size: {
         default: "min-h-11 px-5 py-2",
