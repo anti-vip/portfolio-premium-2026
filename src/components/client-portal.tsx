@@ -12,6 +12,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+const springTransition = {
+  type: "spring",
+  stiffness: 150,
+  damping: 20
+} as const;
+
 const initialCodeState: ClientAuthState = {
   status: "idle",
   step: "request",
@@ -42,15 +48,15 @@ const statusCopy: Record<string, { label: string; className: string }> = {
     className: "border-accent/30 bg-accent/10 text-accent"
   },
   done: {
-    label: "Termine",
+    label: "Terminé",
     className: "border-white/15 bg-white/[0.08] text-foreground"
   },
   completed: {
-    label: "Termine",
+    label: "Terminé",
     className: "border-white/15 bg-white/[0.08] text-foreground"
   },
   closed: {
-    label: "Termine",
+    label: "Terminé",
     className: "border-white/15 bg-white/[0.08] text-foreground"
   }
 };
@@ -73,12 +79,12 @@ function TicketRow({ ticket }: { ticket: TicketSummary }) {
   }).format(new Date(ticket.createdAt));
 
   return (
-    <li className="rounded-lg border border-white/10 bg-background/40 p-4">
+    <li className="rounded-lg border border-white/5 bg-background/40 p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="font-medium text-foreground">{ticket.projectType}</p>
           <p className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            {createdAt} / Priorite {ticket.priority}
+            {createdAt} / Priorité {ticket.priority}
           </p>
         </div>
         <span
@@ -108,14 +114,14 @@ export function ClientPortal() {
   const portalEmail = codeState.email ?? verifyState.email ?? "";
 
   return (
-    <div className="rounded-lg border border-white/10 bg-background/40 p-4 backdrop-blur-xl sm:p-5">
+    <div className="rounded-lg border border-white/5 bg-background/40 p-4 backdrop-blur-xl sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm uppercase tracking-[0.22em] text-primary">
             Portail tickets
           </p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Connexion par email et code temporaire stocke dans Neon.
+            Connexion par email et code temporaire stocké dans Neon.
           </p>
         </div>
         <Badge variant="outline">Email + Code</Badge>
@@ -134,7 +140,7 @@ export function ClientPortal() {
                 placeholder="client@maison.com"
               />
             </label>
-            <Button type="submit" variant="secondary" disabled={isCodePending}>
+            <Button type="submit" variant="secondary" disabled={isCodePending} data-cursor="contact">
               {isCodePending ? "Envoi..." : "Recevoir un code"}
             </Button>
           </form>
@@ -142,7 +148,7 @@ export function ClientPortal() {
           <form action={verifyCodeAction} className="grid gap-3" data-lenis-prevent>
             <input type="hidden" name="portalEmail" value={portalEmail} />
             <label className="grid gap-2 text-sm text-muted-foreground">
-              Code a 6 chiffres
+              Code à 6 chiffres
               <input
                 name="portalCode"
                 inputMode="numeric"
@@ -152,8 +158,8 @@ export function ClientPortal() {
                 placeholder="000000"
               />
             </label>
-            <Button type="submit" disabled={isVerifyPending || !portalEmail}>
-              {isVerifyPending ? "Verification..." : "Ouvrir le dashboard"}
+            <Button type="submit" disabled={isVerifyPending || !portalEmail} data-cursor="contact">
+              {isVerifyPending ? "Vérification..." : "Ouvrir le dashboard"}
             </Button>
           </form>
         </div>
@@ -162,7 +168,7 @@ export function ClientPortal() {
           className="mt-5"
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={springTransition}
         >
           <div className="mb-4 rounded-lg border border-accent/20 bg-accent/10 p-4 text-sm text-accent">
             {verifyState.message}
@@ -181,6 +187,7 @@ export function ClientPortal() {
             <motion.p
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={springTransition}
               className={
                 codeState.status === "success"
                   ? "text-accent"
@@ -194,6 +201,7 @@ export function ClientPortal() {
             <motion.p
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={springTransition}
               className={
                 verifyState.status === "success"
                   ? "text-accent"
