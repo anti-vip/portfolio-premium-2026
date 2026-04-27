@@ -1,16 +1,16 @@
 "use client";
 
 import { ArrowDown, Sparkles } from "lucide-react";
-import { motion, type Variants } from "framer-motion";
+import { motion, type Transition, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/magnetic-button";
 import { ShaderBackground } from "@/components/shader-background";
 
-const springTransition = {
+const springTransition: Transition = {
   type: "spring",
   stiffness: 150,
   damping: 20
-} as const;
+};
 
 const revealContainer: Variants = {
   hidden: {},
