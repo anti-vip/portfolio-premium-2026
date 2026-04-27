@@ -20,6 +20,12 @@ const statusLabels: Record<string, string> = {
   concept: "Concept"
 };
 
+const springTransition = {
+  type: "spring",
+  stiffness: 150,
+  damping: 20
+} as const;
+
 function formatProjectStatus(status: string) {
   return statusLabels[status.toLowerCase()] ?? status;
 }
@@ -34,6 +40,7 @@ export function ProjectCard({
   return (
     <Link
       href={`/projects/${project.slug}`}
+      data-cursor="voir"
       className={[
         "group block h-full min-h-[260px] focus:outline-none",
         slotClassName
@@ -43,18 +50,18 @@ export function ProjectCard({
       <motion.article
         layoutId={`project-card-${project.slug}`}
         className={[
-          "relative h-full overflow-hidden rounded-lg border border-white/10 bg-card p-5 shadow-[0_24px_90px_rgba(0,0,0,0.28)]",
-          "transition-all duration-500 group-hover:-translate-y-1 group-hover:border-primary/30 group-hover:shadow-[0_34px_120px_rgba(245,223,178,0.12)]",
+          "relative h-full overflow-hidden rounded-lg border border-white/5 bg-card p-5",
+          "transition-[border-color,transform] duration-500 group-hover:-translate-y-1 group-hover:border-white/15",
           "group-focus-visible:ring-2 group-focus-visible:ring-primary group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background"
         ].join(" ")}
-        transition={{ duration: 0.72, ease: "easeOut" }}
+        transition={springTransition}
       >
         <motion.div
           layoutId={`project-image-${project.slug}`}
           className="absolute inset-0 scale-100 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
           style={{ backgroundImage: imageLayer }}
           aria-hidden="true"
-          transition={{ duration: 0.82, ease: "easeOut" }}
+          transition={springTransition}
         />
         <div
           className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-80"
@@ -64,7 +71,7 @@ export function ProjectCard({
           className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           style={{
             background:
-              "radial-gradient(circle at 20% 10%, rgba(245,223,178,0.2), transparent 26%)"
+              "radial-gradient(circle at 20% 10%, rgba(245,223,178,0.14), transparent 26%)"
           }}
           aria-hidden="true"
         />
@@ -74,14 +81,14 @@ export function ProjectCard({
             0{index + 1}
           </span>
         </div>
-        <div className="absolute right-5 top-16 translate-y-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-medium text-primary opacity-0 backdrop-blur-xl transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-          Selection premium
+        <div className="absolute right-5 top-16 translate-y-2 rounded-full border border-white/10 bg-background/40 px-3 py-1 text-xs font-medium text-primary opacity-0 backdrop-blur-xl transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+          sélection
         </div>
 
         <div className="relative z-10 flex h-full flex-col justify-end gap-5 pt-24">
           <div>
             <p className="mb-3 text-xs uppercase tracking-[0.22em] text-primary/80">
-              {project.coverPublicId ? "Cloudinary-ready media" : "Generated visual system"}
+              {project.coverPublicId ? "Cloudinary f_auto" : "Visual system"}
             </p>
             <h3
               className={[
