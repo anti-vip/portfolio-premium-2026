@@ -15,6 +15,11 @@ export default async function Home() {
       <HeroSection />
       <ProjectBento projects={projects} />
       <ClientAccess />
+      <footer className="px-5 pb-10 pt-2 sm:px-8 lg:px-10">
+        <div className="mx-auto max-w-6xl border-t border-white/5 pt-6 text-xs font-medium uppercase tracking-[0.24em] text-muted-foreground">
+          © 2026 ANTIDZN — DISPONIBILITÉ LIMITÉE.
+        </div>
+      </footer>
     </main>
   );
 }
