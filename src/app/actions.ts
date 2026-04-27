@@ -102,7 +102,7 @@ export async function requestClientAccess(
   if (!name || !emailPattern.test(email) || !projectType || message.length < 16) {
     return {
       status: "error",
-      message: "Completez le brief avec un email valide et au moins 16 caracteres."
+      message: "Complétez le brief avec un email valide et au moins 16 caractères."
     };
   }
 
@@ -111,7 +111,7 @@ export async function requestClientAccess(
   if (!sql) {
     return {
       status: "error",
-      message: "Neon est pret, mais DATABASE_URL doit etre ajoute sur Vercel pour activer les tickets."
+      message: "Neon est prêt, mais DATABASE_URL doit être ajouté sur Vercel pour activer les tickets."
     };
   }
 
@@ -135,7 +135,9 @@ export async function requestClientAccess(
     VALUES (${email}, ${tokenHash}, now() + interval '30 minutes')
   `;
 
-  const priority = budgetRange.includes("100") ? "high" : "normal";
+  const priority = budgetRange.toLowerCase().includes("signature")
+    ? "high"
+    : "normal";
   const ticketRows = (await sql`
     INSERT INTO contact_tickets (
       account_id,
@@ -165,7 +167,7 @@ export async function requestClientAccess(
   if (!ticket) {
     return {
       status: "error",
-      message: "Impossible de creer le ticket Neon. Reessayez dans un instant."
+      message: "Impossible de créer le ticket Neon. Réessayez dans un instant."
     };
   }
 
@@ -216,8 +218,8 @@ export async function requestClientAccess(
     notificationStatus: notification.status,
     message:
       notification.status === "sent"
-        ? "Ticket cree. Notification envoyee et validation client Neon en attente."
-        : "Ticket cree dans Neon. Ajoutez les variables SendGrid sur Vercel pour activer la notification immediate."
+        ? "Ticket créé. Notification envoyée."
+        : "Ticket créé dans Neon. Ajoutez les variables SendGrid sur Vercel pour activer la notification immédiate."
   };
 }
 
@@ -241,7 +243,7 @@ export async function requestClientLoginCode(
     return {
       status: "error",
       step: "request",
-      message: "DATABASE_URL doit etre configure sur Vercel pour activer l'espace client.",
+      message: "DATABASE_URL doit être configuré sur Vercel pour activer l'espace client.",
       email
     };
   }
@@ -257,7 +259,7 @@ export async function requestClientLoginCode(
     return {
       status: "error",
       step: "request",
-      message: "Compte client introuvable. Creez un ticket avant de vous connecter.",
+      message: "Compte client introuvable. Créez un ticket avant de vous connecter.",
       email
     };
   }
@@ -278,10 +280,10 @@ export async function requestClientLoginCode(
     email,
     message:
       delivery.status === "sent"
-        ? "Code envoye. Consultez votre boite email pour ouvrir le dashboard."
+        ? "Code envoyé. Consultez votre boîte email pour ouvrir le dashboard."
         : delivery.status === "skipped"
-          ? "Code cree dans Neon. Configurez SendGrid pour l'envoi email automatique."
-          : "Le code a ete cree, mais SendGrid n'a pas pu envoyer l'email."
+          ? "Code créé dans Neon. Configurez SendGrid pour l'envoi email automatique."
+          : "Le code a été créé, mais SendGrid n'a pas pu envoyer l'email."
   };
 }
 
@@ -297,7 +299,7 @@ export async function verifyClientLoginCode(
       status: "error",
       step: "verify",
       email,
-      message: "Saisissez l'email et le code a 6 chiffres."
+      message: "Saisissez l'email et le code à 6 chiffres."
     };
   }
 
@@ -308,7 +310,7 @@ export async function verifyClientLoginCode(
       status: "error",
       step: "verify",
       email,
-      message: "DATABASE_URL doit etre configure sur Vercel pour verifier l'acces."
+      message: "DATABASE_URL doit être configuré sur Vercel pour vérifier l'accès."
     };
   }
 
@@ -330,7 +332,7 @@ export async function verifyClientLoginCode(
       status: "error",
       step: "verify",
       email,
-      message: "Code invalide ou expire. Demandez un nouveau code."
+      message: "Code invalide ou expiré. Demandez un nouveau code."
     };
   }
 
@@ -348,7 +350,7 @@ export async function verifyClientLoginCode(
     email,
     tickets,
     message: tickets.length
-      ? "Acces valide. Vos tickets sont synchronises depuis Neon."
-      : "Acces valide. Aucun ticket rattache a ce compte pour le moment."
+      ? "Accès valide. Vos tickets sont synchronisés depuis Neon."
+      : "Accès valide. Aucun ticket rattaché à ce compte pour le moment."
   };
 }
