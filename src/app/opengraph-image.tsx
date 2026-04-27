@@ -30,7 +30,7 @@ export default function OpenGraphImage() {
             right: 0,
             width: 420,
             height: 420,
-            background: "rgba(245,223,178,0.16)",
+            background: "rgba(245,223,178,0.12)",
             borderRadius: 420
           }}
         />
@@ -41,7 +41,7 @@ export default function OpenGraphImage() {
             left: -40,
             width: 520,
             height: 260,
-            background: "rgba(57,188,161,0.14)",
+            background: "rgba(57,188,161,0.1)",
             borderRadius: 260
           }}
         />
@@ -56,33 +56,32 @@ export default function OpenGraphImage() {
             textTransform: "uppercase"
           }}
         >
-          <span>Portfolio Premium 2026</span>
-          <span>Luxury Digital</span>
+          <span>ANTIDZN</span>
+          <span>France / C4D</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
           <h1
             style={{
               margin: 0,
-              maxWidth: 960,
-              fontSize: 108,
+              maxWidth: 1040,
+              fontSize: 104,
               lineHeight: 0.9,
               fontWeight: 700
             }}
           >
-            Senior Creative Developer
+            Direction Artistique & Systèmes Visuels.
           </h1>
           <p
             style={{
               margin: 0,
-              maxWidth: 780,
+              maxWidth: 820,
               color: "#a7a29a",
-              fontSize: 34,
+              fontSize: 32,
               lineHeight: 1.35
             }}
           >
-            Interfaces sombres, projets dynamiques, espace client Neon et
-            direction digitale haut de gamme.
+            Identités à fort caractère. 3D, C4D et branding de communautés digitales.
           </p>
         </div>
       </div>
