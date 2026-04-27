@@ -1,26 +1,27 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { CustomCursor } from "@/components/custom-cursor";
 import { MotionProvider } from "@/components/motion-provider";
 import { SmoothScroll } from "@/components/smooth-scroll";
 
 export const metadata: Metadata = {
   title: {
-    default: "Portfolio Premium 2026 | Senior Creative Developer",
-    template: "%s | Portfolio Premium 2026"
+    default: "ANTIDZN | Direction Artistique & Systèmes Visuels",
+    template: "%s | ANTIDZN"
   },
   description:
-    "Portfolio ultra-premium pour maisons ambitieuses: direction digitale, interfaces luxe, projets dynamiques et espace client prive.",
+    "Conception d'identités à fort caractère. Spécialisé en 3D (C4D) et branding de communautés digitales. Basé en France.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://portfolio-premium-2026.vercel.app"
   ),
-  applicationName: "Portfolio Premium 2026",
+  applicationName: "ANTIDZN",
   icons: {
     icon: "/icon"
   },
   openGraph: {
-    title: "Portfolio Premium 2026",
+    title: "ANTIDZN — Direction Artistique & Systèmes Visuels",
     description:
-      "Senior Creative Developer pour experiences digitales luxe, projets Cloudinary et espace client Neon.",
+      "Conception d'identités à fort caractère. 3D, C4D et branding de communautés digitales.",
     type: "website",
     locale: "fr_FR",
     images: [
@@ -28,15 +29,15 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Portfolio Premium 2026"
+        alt: "ANTIDZN"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "Portfolio Premium 2026",
+    title: "ANTIDZN — Direction Artistique & Systèmes Visuels",
     description:
-      "Senior Creative Developer pour experiences digitales luxe, projets dynamiques et espace client prive.",
+      "Conception d'identités à fort caractère. Spécialisé en 3D (C4D) et branding de communautés digitales.",
     images: ["/opengraph-image"]
   }
 };
@@ -51,6 +52,8 @@ export default function RootLayout({
       <body className="antialiased">
         <SmoothScroll />
         <MotionProvider>{children}</MotionProvider>
+        <div className="site-noise" aria-hidden="true" />
+        <CustomCursor />
       </body>
     </html>
   );
