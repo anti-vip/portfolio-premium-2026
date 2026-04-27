@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 
 const navItems = [
   { label: "Projets", href: "/#projects" },
-  { label: "Systeme", href: "/#system" },
-  { label: "Client", href: "/#contact" }
+  { label: "Système", href: "/#system" },
+  { label: "Contact", href: "/#contact" }
 ];
 
 export function SiteNav() {
@@ -44,13 +44,13 @@ export function SiteNav() {
           : "-translate-y-20 opacity-0"
       ].join(" ")}
     >
-      <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full border border-white/10 bg-background/50 px-3 shadow-[0_18px_70px_rgba(0,0,0,0.34)] backdrop-blur-2xl">
+      <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full border border-white/5 bg-background/50 px-3 backdrop-blur-2xl">
         <Link href="/" className="flex min-h-11 items-center gap-3 px-2">
-          <span className="grid size-8 place-items-center rounded-full border border-primary/30 bg-primary/10 text-xs font-bold text-primary">
-            P26
+          <span className="grid size-8 place-items-center rounded-full border border-primary/25 bg-primary/10 text-xs font-bold text-primary">
+            AD
           </span>
           <span className="hidden font-display text-sm font-semibold tracking-normal text-foreground sm:block">
-            Portfolio Premium
+            ANTIDZN
           </span>
         </Link>
 
@@ -67,7 +67,7 @@ export function SiteNav() {
         </div>
 
         <Button asChild size="sm" variant="secondary">
-          <Link href="/#contact">
+          <Link href="/#contact" data-cursor="contact">
             Brief
             <ArrowUpRight aria-hidden="true" data-icon="inline-end" />
           </Link>
