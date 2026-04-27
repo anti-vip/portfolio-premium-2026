@@ -21,12 +21,12 @@ export default function Icon() {
           background: "#050507",
           color: "#f5dfb2",
           border: "1px solid rgba(245,223,178,0.42)",
-          fontSize: 20,
+          fontSize: 21,
           fontWeight: 700,
           fontFamily: "Inter, Arial, sans-serif"
         }}
       >
-        P26
+        AD
       </div>
     ),
     size
