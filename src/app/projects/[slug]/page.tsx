@@ -50,7 +50,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     projects.find((candidate) => candidate.slug !== project.slug) ?? null;
   const imageLayer = project.imageUrl
     ? `linear-gradient(180deg, rgba(5,5,7,0.08), rgba(5,5,7,0.86)), url(${project.imageUrl})`
-    : "radial-gradient(circle at 20% 18%, rgba(245,223,178,0.32), transparent 30%), radial-gradient(circle at 82% 8%, rgba(57,188,161,0.24), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))";
+    : "radial-gradient(circle at 20% 18%, rgba(245,223,178,0.28), transparent 30%), radial-gradient(circle at 82% 8%, rgba(57,188,161,0.18), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015))";
 
   return (
     <main className="relative min-h-screen overflow-hidden">
@@ -60,9 +60,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <section className="px-5 py-20 sm:px-8 sm:py-24 lg:px-10">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.76fr_1.24fr]">
           <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
-            <div className="rounded-lg border border-white/10 bg-white/[0.045] p-5 backdrop-blur-2xl sm:p-6">
+            <div className="rounded-lg border border-white/5 bg-white/[0.04] p-5 backdrop-blur-2xl sm:p-6">
               <p className="text-xs uppercase tracking-[0.22em] text-primary">
-                Project room
+                Dossier
               </p>
               <dl className="mt-6 grid gap-5 text-sm">
                 <div>
@@ -70,13 +70,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   <dd className="mt-1 text-foreground">{project.status}</dd>
                 </div>
                 <div>
-                  <dt className="text-muted-foreground">Priorite</dt>
+                  <dt className="text-muted-foreground">Angle</dt>
                   <dd className="mt-1 text-foreground">
-                    Experience, conversion et retention client
+                    Identité, conversion et mémoire visuelle
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-muted-foreground">Media</dt>
+                  <dt className="text-muted-foreground">Média</dt>
                   <dd className="mt-1 text-foreground">
                     Cloudinary f_auto, q_auto
                   </dd>
@@ -86,22 +86,23 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
             <Link
               href="/#contact"
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-border bg-white/[0.04] px-5 text-sm font-semibold text-foreground backdrop-blur-xl transition-colors hover:bg-white/[0.08]"
+              data-cursor="contact"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/5 bg-white/[0.04] px-5 text-sm font-semibold text-foreground backdrop-blur-xl transition-colors hover:bg-white/[0.08]"
             >
-              Ouvrir un ticket projet
+              Envoyer un brief
             </Link>
           </aside>
 
           <article className="space-y-12">
             <div className="grid gap-4 sm:grid-cols-3">
               {[
-                ["01", "Direction", "Signature visuelle stricte et memorable."],
-                ["02", "Systeme", "Composants reactifs, data Neon et media Cloudinary."],
-                ["03", "Motion", "Transitions douces, micro-interactions et scroll fluide."]
+                ["01", "Direction", "Une signature visuelle stricte et mémorable."],
+                ["02", "Système", "Composants, data Neon et médias Cloudinary."],
+                ["03", "Mouvement", "Micro-interactions sèches, lourdes, précises."]
               ].map(([step, title, copy]) => (
                 <div
                   key={step}
-                  className="rounded-lg border border-white/10 bg-card/70 p-5 backdrop-blur-xl sm:p-6"
+                  className="rounded-lg border border-white/5 bg-card/70 p-5 backdrop-blur-xl sm:p-6"
                 >
                   <p className="font-display text-3xl text-primary">{step}</p>
                   <h2 className="mt-5 font-display text-2xl font-semibold">
@@ -116,25 +117,22 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
             <div className="space-y-7">
               <p className="text-sm uppercase tracking-[0.24em] text-primary">
-                Editorial build
+                Lecture éditoriale
               </p>
               <h2 className="font-display text-4xl font-semibold leading-none sm:text-6xl">
-                Une experience digitale qui garde la tension du luxe tout en
-                restant rapide et administrable.
+                Une présence digitale qui ne cherche pas à plaire à tout le monde.
               </h2>
               <div className="grid gap-6 text-base leading-8 text-muted-foreground md:grid-cols-2">
                 <p>
-                  Le projet est pense comme une piece editoriale: une entree
+                  Le projet est pensé comme une pièce éditoriale : une entrée
                   forte, une narration courte, des preuves visibles et un chemin
-                  direct vers la conversion. Les images sont servies via
-                  Cloudinary avec transformations automatiques pour garder un
-                  rendu net sans alourdir la page.
+                  direct vers le contact. Les images sont servies via Cloudinary
+                  pour rester nettes sans alourdir la page.
                 </p>
                 <p>
-                  Cote systeme, Neon garde les demandes, les statuts et les
-                  sessions client. Le front reste minimal, mais chaque action
-                  utile est connectee: brief, dashboard, notifications et suivi
-                  prive.
+                  Côté système, Neon garde les demandes, les statuts et les
+                  accès client. Le front reste tendu, mais chaque action utile
+                  est connectée : brief, dashboard, notifications et suivi privé.
                 </p>
               </div>
             </div>
@@ -143,7 +141,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               {project.services.map((service) => (
                 <span
                   key={service}
-                  className="inline-flex min-h-8 items-center rounded-md border border-border px-2.5 py-1 text-xs font-medium text-foreground"
+                  className="inline-flex min-h-8 items-center rounded-md border border-white/5 px-2.5 py-1 text-xs font-medium text-foreground"
                 >
                   {service}
                 </span>
@@ -153,7 +151,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {nextProject ? (
               <Link
                 href={`/projects/${nextProject.slug}`}
-                className="group block rounded-lg border border-white/10 bg-white/[0.045] p-5 transition-colors hover:border-primary/30 sm:p-6"
+                data-cursor="voir"
+                className="group block rounded-lg border border-white/5 bg-white/[0.04] p-5 transition-colors hover:border-white/15 sm:p-6"
               >
                 <p className="text-sm uppercase tracking-[0.22em] text-primary">
                   Projet suivant
