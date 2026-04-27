@@ -74,7 +74,7 @@ export function HeroSection() {
             className="flex max-w-3xl flex-col gap-6 md:flex-row md:items-end md:justify-between"
           >
             <p className="max-w-2xl text-balance text-lg leading-8 text-muted-foreground sm:text-xl">
-              Conception d'identités à fort caractère. Spécialisé en 3D (C4D)
+              Conception d&apos;identités à fort caractère. Spécialisé en 3D (C4D)
               et branding de communautés digitales. Basé en France.
             </p>
 
