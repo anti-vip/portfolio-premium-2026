@@ -10,6 +10,12 @@ type ProjectDetailHeroProps = {
   imageLayer: string;
 };
 
+const springTransition = {
+  type: "spring",
+  stiffness: 150,
+  damping: 20
+} as const;
+
 const reveal = {
   hidden: { opacity: 0, y: 28 },
   show: { opacity: 1, y: 0 }
@@ -23,7 +29,7 @@ export function ProjectDetailHero({ project, imageLayer }: ProjectDetailHeroProp
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: imageLayer }}
         aria-hidden="true"
-        transition={{ duration: 0.9, ease: "easeOut" }}
+        transition={springTransition}
       />
       <div
         className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-background via-background/70 to-transparent"
@@ -35,10 +41,11 @@ export function ProjectDetailHero({ project, imageLayer }: ProjectDetailHeroProp
         animate="show"
         transition={{ staggerChildren: 0.08, delayChildren: 0.1 }}
       >
-        <motion.div variants={reveal} transition={{ duration: 0.62, ease: "easeOut" }}>
+        <motion.div variants={reveal} transition={springTransition}>
           <Link
             href="/#projects"
-            className="inline-flex min-h-11 w-fit items-center justify-center rounded-full border border-border bg-white/[0.04] px-5 text-sm font-semibold text-foreground backdrop-blur-xl transition-colors hover:bg-white/[0.08]"
+            data-cursor="voir"
+            className="inline-flex min-h-11 w-fit items-center justify-center rounded-full border border-white/5 bg-white/[0.04] px-5 text-sm font-semibold text-foreground backdrop-blur-xl transition-colors hover:bg-white/[0.08]"
           >
             Retour aux projets
           </Link>
@@ -46,14 +53,14 @@ export function ProjectDetailHero({ project, imageLayer }: ProjectDetailHeroProp
 
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
-            <motion.div className="mb-5 flex flex-wrap gap-2" variants={reveal} transition={{ duration: 0.62, ease: "easeOut" }}>
+            <motion.div className="mb-5 flex flex-wrap gap-2" variants={reveal} transition={springTransition}>
               <span className="inline-flex min-h-8 items-center rounded-md bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground">
                 {project.status}
               </span>
               {project.services.slice(0, 3).map((service) => (
                 <span
                   key={service}
-                  className="inline-flex min-h-8 items-center rounded-md border border-border px-2.5 py-1 text-xs font-medium text-foreground"
+                  className="inline-flex min-h-8 items-center rounded-md border border-white/5 px-2.5 py-1 text-xs font-medium text-foreground"
                 >
                   {service}
                 </span>
@@ -63,15 +70,15 @@ export function ProjectDetailHero({ project, imageLayer }: ProjectDetailHeroProp
               layoutId={`project-title-${project.slug}`}
               className="max-w-5xl font-display text-[clamp(3.2rem,13vw,9rem)] font-semibold leading-[0.87] tracking-normal text-foreground"
               variants={reveal}
-              transition={{ duration: 0.7, ease: "easeOut" }}
+              transition={springTransition}
             >
               {project.title}
             </motion.h1>
           </div>
           <motion.div
-            className="rounded-lg border border-white/10 bg-background/50 p-5 backdrop-blur-2xl sm:p-6"
+            className="rounded-lg border border-white/5 bg-background/50 p-5 backdrop-blur-2xl sm:p-6"
             variants={reveal}
-            transition={{ duration: 0.72, ease: "easeOut" }}
+            transition={springTransition}
           >
             <p className="text-sm uppercase tracking-[0.22em] text-primary">
               Case study
@@ -81,9 +88,10 @@ export function ProjectDetailHero({ project, imageLayer }: ProjectDetailHeroProp
             </p>
             <Link
               href="/#contact"
+              data-cursor="contact"
               className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Lancer un brief similaire
+              Envoyer un brief similaire
             </Link>
           </motion.div>
         </div>
