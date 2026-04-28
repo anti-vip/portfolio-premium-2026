@@ -22,7 +22,7 @@ const statusLabels: Record<string, string> = {
 
 const springTransition = {
   type: "spring",
-  stiffness: 150,
+  stiffness: 120,
   damping: 20
 } as const;
 
@@ -40,7 +40,6 @@ export function ProjectCard({
   return (
     <Link
       href={`/projects/${project.slug}`}
-      data-cursor="voir"
       className={[
         "group block h-full min-h-[260px] focus:outline-none",
         slotClassName
@@ -54,11 +53,14 @@ export function ProjectCard({
           "transition-[border-color,transform] duration-500 group-hover:-translate-y-1 group-hover:border-white/15",
           "group-focus-visible:ring-2 group-focus-visible:ring-primary group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background"
         ].join(" ")}
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
         transition={springTransition}
       >
         <motion.div
           layoutId={`project-image-${project.slug}`}
-          className="absolute inset-0 scale-100 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
+          className="absolute inset-0 scale-100 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
           style={{ backgroundImage: imageLayer }}
           aria-hidden="true"
           transition={springTransition}

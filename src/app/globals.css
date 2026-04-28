@@ -73,6 +73,22 @@ body {
   font-family: var(--font-sans);
 }
 
+html.theme-ash {
+  --background: #080806;
+  --card: #10100d;
+  --popover: #10100d;
+  --primary: #f2e5c4;
+  --secondary: #171611;
+  --muted: #191812;
+  --accent: #d7f7e2;
+}
+
+html.theme-ash body {
+  background:
+    radial-gradient(circle at 74% 0%, rgba(242, 229, 196, 0.07), transparent 24rem),
+    linear-gradient(180deg, #080806 0%, #0b0a08 48%, #060605 100%);
+}
+
 button,
 input,
 textarea,
@@ -99,24 +115,6 @@ select {
   background-size: 7px 7px, 11px 11px, 13px 13px;
 }
 
-@media (pointer: fine) {
-  .custom-cursor-ready body,
-  .custom-cursor-ready a,
-  .custom-cursor-ready button,
-  .custom-cursor-ready [data-cursor] {
-    cursor: none;
-  }
-
-  .custom-cursor-ready input,
-  .custom-cursor-ready textarea {
-    cursor: text;
-  }
-
-  .custom-cursor-ready select {
-    cursor: default;
-  }
-}
-
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
@@ -141,6 +139,29 @@ select {
   mask-image: linear-gradient(to bottom, black 0%, black 56%, transparent 100%);
 }
 
+@keyframes marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.reviews-marquee-track {
+  animation: marquee-left 42s linear infinite;
+}
+
+.clients-marquee-track {
+  animation: marquee-left 55s linear infinite;
+}
+
+.reviews-marquee-track:hover,
+.clients-marquee-track:hover {
+  animation-play-state: paused;
+}
+
 @keyframes client-success-reveal {
   from {
     opacity: 0;
@@ -157,4 +178,12 @@ select {
 
 .client-success-reveal {
   animation: client-success-reveal 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reviews-marquee-track,
+  .clients-marquee-track,
+  .client-success-reveal {
+    animation: none;
+  }
 }

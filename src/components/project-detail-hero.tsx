@@ -12,7 +12,7 @@ type ProjectDetailHeroProps = {
 
 const springTransition = {
   type: "spring",
-  stiffness: 150,
+  stiffness: 120,
   damping: 20
 } as const;
 
@@ -44,7 +44,6 @@ export function ProjectDetailHero({ project, imageLayer }: ProjectDetailHeroProp
         <motion.div variants={reveal} transition={springTransition}>
           <Link
             href="/#projects"
-            data-cursor="voir"
             className="inline-flex min-h-11 w-fit items-center justify-center rounded-full border border-white/5 bg-white/[0.04] px-5 text-sm font-semibold text-foreground backdrop-blur-xl transition-colors hover:bg-white/[0.08]"
           >
             Retour aux projets
@@ -53,7 +52,11 @@ export function ProjectDetailHero({ project, imageLayer }: ProjectDetailHeroProp
 
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
-            <motion.div className="mb-5 flex flex-wrap gap-2" variants={reveal} transition={springTransition}>
+            <motion.div
+              className="mb-5 flex flex-wrap gap-2"
+              variants={reveal}
+              transition={springTransition}
+            >
               <span className="inline-flex min-h-8 items-center rounded-md bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground">
                 {project.status}
               </span>
@@ -88,7 +91,6 @@ export function ProjectDetailHero({ project, imageLayer }: ProjectDetailHeroProp
             </p>
             <Link
               href="/#contact"
-              data-cursor="contact"
               className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Envoyer un brief similaire

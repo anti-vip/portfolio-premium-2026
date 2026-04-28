@@ -8,6 +8,8 @@ import {
   sendTicketNotification
 } from "@/lib/sendgrid";
 
+type SqlClient = NonNullable<ReturnType<typeof getSql>>;
+
 export type AccessActionState = {
   status: "idle" | "success" | "error";
   message: string;
@@ -18,9 +20,11 @@ export type AccessActionState = {
 export type TicketSummary = {
   id: string;
   createdAt: string;
+  launchDate: string | null;
   priority: string;
   projectType: string;
   status: string;
+  statusStep: number;
 };
 
 export type ClientAuthState = {
@@ -44,9 +48,11 @@ type TicketRow = {
 type TicketSummaryRow = {
   id: string;
   created_at: string | Date;
+  launch_date: string | Date | null;
   priority: string | null;
   project_type: string | null;
   status: string | null;
+  status_step: number | null;
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,8 +61,55 @@ function hashToken(value: string) {
   return createHash("sha256").update(value).digest("hex");
 }
 
+function normalizeDate(value: string | Date | null) {
+  if (!value) {
+    return null;
+  }
+
+  return value instanceof Date ? value.toISOString() : value;
+}
+
 function normalizeCreatedAt(value: string | Date) {
   return value instanceof Date ? value.toISOString() : value;
+}
+
+function parseBudgetAmount(value: string) {
+  const match = value.match(/\d+/);
+
+  return match ? Number(match[0]) : 0;
+}
+
+function inferPriority(budgetRange: string) {
+  const amount = parseBudgetAmount(budgetRange);
+
+  return amount >= 1800 || budgetRange.toLowerCase().includes("signature")
+    ? "high"
+    : "normal";
+}
+
+function isLaunchDateAllowed(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
+  }
+
+  const requested = new Date(`${value}T00:00:00.000Z`);
+  const minimum = new Date();
+  minimum.setUTCHours(0, 0, 0, 0);
+  minimum.setUTCDate(minimum.getUTCDate() + 14);
+
+  return !Number.isNaN(requested.getTime()) && requested >= minimum;
+}
+
+async function ensureContactTicketColumns(sql: SqlClient) {
+  await sql`
+    ALTER TABLE contact_tickets
+    ADD COLUMN IF NOT EXISTS status_step integer NOT NULL DEFAULT 1
+  `;
+
+  await sql`
+    ALTER TABLE contact_tickets
+    ADD COLUMN IF NOT EXISTS launch_date date
+  `;
 }
 
 async function getTicketSummaries(accountId: string): Promise<TicketSummary[]> {
@@ -66,12 +119,16 @@ async function getTicketSummaries(accountId: string): Promise<TicketSummary[]> {
     return [];
   }
 
+  await ensureContactTicketColumns(sql);
+
   const rows = (await sql`
     SELECT
       id,
       status,
+      status_step,
       priority,
       project_type,
+      launch_date,
       created_at
     FROM contact_tickets
     WHERE account_id = ${accountId}
@@ -82,9 +139,11 @@ async function getTicketSummaries(accountId: string): Promise<TicketSummary[]> {
   return rows.map((ticket) => ({
     id: ticket.id,
     createdAt: normalizeCreatedAt(ticket.created_at),
+    launchDate: normalizeDate(ticket.launch_date),
     priority: ticket.priority ?? "normal",
     projectType: ticket.project_type ?? "Projet premium",
-    status: ticket.status ?? "new"
+    status: ticket.status ?? "new",
+    statusStep: ticket.status_step ?? 1
   }));
 }
 
@@ -97,12 +156,20 @@ export async function requestClientAccess(
   const company = String(formData.get("company") ?? "").trim();
   const projectType = String(formData.get("projectType") ?? "").trim();
   const budgetRange = String(formData.get("budgetRange") ?? "").trim();
+  const launchDate = String(formData.get("launchDate") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
 
   if (!name || !emailPattern.test(email) || !projectType || message.length < 16) {
     return {
       status: "error",
       message: "Complétez le brief avec un email valide et au moins 16 caractères."
+    };
+  }
+
+  if (!isLaunchDateAllowed(launchDate)) {
+    return {
+      status: "error",
+      message: "Choisissez une date de lancement hors des 14 prochains jours."
     };
   }
 
@@ -114,6 +181,8 @@ export async function requestClientAccess(
       message: "Neon est prêt, mais DATABASE_URL doit être ajouté sur Vercel pour activer les tickets."
     };
   }
+
+  await ensureContactTicketColumns(sql);
 
   const verificationToken = randomBytes(24).toString("hex");
   const tokenHash = hashToken(verificationToken);
@@ -135,9 +204,7 @@ export async function requestClientAccess(
     VALUES (${email}, ${tokenHash}, now() + interval '30 minutes')
   `;
 
-  const priority = budgetRange.toLowerCase().includes("signature")
-    ? "high"
-    : "normal";
+  const priority = inferPriority(budgetRange);
   const ticketRows = (await sql`
     INSERT INTO contact_tickets (
       account_id,
@@ -146,6 +213,7 @@ export async function requestClientAccess(
       company,
       project_type,
       budget_range,
+      launch_date,
       message,
       priority
     )
@@ -156,6 +224,7 @@ export async function requestClientAccess(
       ${company || null},
       ${projectType},
       ${budgetRange || null},
+      ${launchDate},
       ${message},
       ${priority}
     )
@@ -178,7 +247,7 @@ export async function requestClientAccess(
     VALUES (
       ${ticket.id},
       'ticket_created',
-      ${JSON.stringify({ source: "portfolio", priority })}::jsonb
+      ${JSON.stringify({ source: "portfolio", priority, launchDate })}::jsonb
     )
   `;
 

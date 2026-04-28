@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 
 const springTransition = {
   type: "spring",
-  stiffness: 150,
+  stiffness: 120,
   damping: 20
 } as const;
 
@@ -29,6 +29,13 @@ const initialVerifyState: ClientAuthState = {
   step: "verify",
   message: ""
 };
+
+const timelineSteps = [
+  "Brief reçu",
+  "Rendu 3D en cours",
+  "Validation",
+  "Assets livrés"
+];
 
 const statusCopy: Record<string, { label: string; className: string }> = {
   new: {
@@ -70,13 +77,18 @@ function ticketStatus(status: string) {
   );
 }
 
-function TicketRow({ ticket }: { ticket: TicketSummary }) {
-  const status = ticketStatus(ticket.status);
-  const createdAt = new Intl.DateTimeFormat("fr-FR", {
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("fr-FR", {
     day: "2-digit",
     month: "short",
     year: "numeric"
-  }).format(new Date(ticket.createdAt));
+  }).format(new Date(value));
+}
+
+function TicketRow({ ticket }: { ticket: TicketSummary }) {
+  const status = ticketStatus(ticket.status);
+  const currentStep = Math.min(Math.max(ticket.statusStep ?? 1, 1), 4);
+  const launchDate = ticket.launchDate ? formatDate(ticket.launchDate) : null;
 
   return (
     <li className="rounded-lg border border-white/5 bg-background/40 p-4">
@@ -84,7 +96,8 @@ function TicketRow({ ticket }: { ticket: TicketSummary }) {
         <div>
           <p className="font-medium text-foreground">{ticket.projectType}</p>
           <p className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            {createdAt} / Priorité {ticket.priority}
+            {formatDate(ticket.createdAt)} / Priorité {ticket.priority}
+            {launchDate ? ` / Lancement ${launchDate}` : ""}
           </p>
         </div>
         <span
@@ -96,6 +109,38 @@ function TicketRow({ ticket }: { ticket: TicketSummary }) {
           {status.label}
         </span>
       </div>
+
+      <ol className="mt-5 grid gap-3 sm:grid-cols-4">
+        {timelineSteps.map((step, index) => {
+          const stepIndex = index + 1;
+          const isActive = stepIndex <= currentStep;
+
+          return (
+            <li className="relative" key={step}>
+              <div
+                className={[
+                  "flex min-h-11 items-center gap-3 rounded-lg border px-3 text-xs font-medium",
+                  isActive
+                    ? "border-primary/25 bg-primary/10 text-primary"
+                    : "border-white/5 bg-white/[0.025] text-muted-foreground"
+                ].join(" ")}
+              >
+                <span
+                  className={[
+                    "grid size-6 shrink-0 place-items-center rounded-full border text-[10px]",
+                    isActive
+                      ? "border-primary/35 text-primary"
+                      : "border-white/10 text-muted-foreground"
+                  ].join(" ")}
+                >
+                  {stepIndex}
+                </span>
+                {step}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
     </li>
   );
 }
@@ -140,8 +185,12 @@ export function ClientPortal() {
                 placeholder="client@maison.com"
               />
             </label>
-            <Button type="submit" variant="secondary" disabled={isCodePending} data-cursor="contact">
-              {isCodePending ? "Envoi..." : "Recevoir un code"}
+            <Button
+              type="submit"
+              variant="secondary"
+              disabled={isCodePending}
+            >
+              Recevoir un code
             </Button>
           </form>
 
@@ -158,8 +207,8 @@ export function ClientPortal() {
                 placeholder="000000"
               />
             </label>
-            <Button type="submit" disabled={isVerifyPending || !portalEmail} data-cursor="contact">
-              {isVerifyPending ? "Vérification..." : "Ouvrir le dashboard"}
+            <Button type="submit" disabled={isVerifyPending || !portalEmail}>
+              Ouvrir le dashboard
             </Button>
           </form>
         </div>

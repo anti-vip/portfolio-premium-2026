@@ -2,13 +2,13 @@
 
 import { ArrowDown } from "lucide-react";
 import { motion, type Transition, type Variants } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/magnetic-button";
 import { ShaderBackground } from "@/components/shader-background";
+import { Button } from "@/components/ui/button";
 
 const springTransition: Transition = {
   type: "spring",
-  stiffness: 150,
+  stiffness: 120,
   damping: 20
 };
 
@@ -33,14 +33,7 @@ const revealItem: Variants = {
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-[92svh] items-end overflow-hidden px-5 pb-12 pt-32 sm:px-8 lg:px-10 bg-black">
-      {/* 1. CSS Noise 3% - Génère un effet pellicule haut de gamme */}
-      <div 
-        className="pointer-events-none absolute inset-0 z-50 opacity-[0.03] mix-blend-overlay"
-        style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')" }}
-        aria-hidden="true"
-      />
-
+    <section className="relative flex min-h-[92svh] items-end overflow-hidden bg-black px-5 pb-12 pt-32 sm:px-8 lg:px-10">
       <div className="luxury-grid absolute inset-0 opacity-30" aria-hidden="true" />
       <ShaderBackground />
       <div
@@ -55,28 +48,26 @@ export function HeroSection() {
           animate="visible"
           className="flex flex-col gap-8"
         >
-          {/* 2. Badge de disponibilité (Conversion) */}
           <motion.div
             variants={revealItem}
             className="flex w-fit items-center gap-3 rounded-none border border-white/5 bg-black/50 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.25em] text-white/70 backdrop-blur-md"
           >
             <div className="relative flex h-2 w-2 items-center justify-center">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-40"></span>
-              <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500"></span>
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-40" />
+              <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
             </div>
-            Status : Disponible [Q3]
+            DISPONIBILITÉ : 1 CRÉNEAU RESTANT
           </motion.div>
 
-          {/* 3. Typographie Froide & Brutaliste */}
-          <h1 className="max-w-6xl font-display text-[clamp(2.5rem,10vw,7.5rem)] font-medium leading-[0.9] tracking-tight text-white">
+          <h1 className="max-w-6xl font-display text-[clamp(2.7rem,10vw,7.7rem)] font-medium leading-[0.9] tracking-normal text-white">
             <span className="block overflow-hidden pb-2">
               <motion.span variants={revealItem} className="block">
-                ANTIDZN ©
+                ANTIDZN —
               </motion.span>
             </span>
             <span className="block overflow-hidden pb-3">
               <motion.span variants={revealItem} className="block text-white/80">
-                Direction Artistique
+                Direction Artistique & Systèmes Visuels.
               </motion.span>
             </span>
           </h1>
@@ -86,16 +77,21 @@ export function HeroSection() {
             className="flex max-w-3xl flex-col gap-8 md:flex-row md:items-end md:justify-between"
           >
             <p className="max-w-md text-balance text-sm leading-relaxed tracking-wide text-white/50">
-              Conception de systèmes visuels exclusifs. Spécialisation 3D (C4D) 
-              et architecture de marques pour entités digitales exigeantes.
+              {
+                "Conception d'identités à fort caractère. Spécialisé en 3D (C4D) et branding de communautés digitales. Basé en France."
+              }
             </p>
 
             <div className="flex shrink-0 items-center gap-4">
-              {/* Suppression du data-cursor */}
               <MagneticButton href="#contact">
-                Soumettre un projet
+                Initier un projet
               </MagneticButton>
-              <Button asChild variant="outline" size="icon" className="rounded-none border-white/5 bg-transparent hover:bg-white/5">
+              <Button
+                asChild
+                variant="outline"
+                size="icon"
+                className="rounded-none border-white/5 bg-transparent hover:bg-white/5"
+              >
                 <a href="#projects" aria-label="Voir le portfolio">
                   <ArrowDown aria-hidden="true" className="size-4 text-white/70" />
                 </a>
@@ -104,7 +100,6 @@ export function HeroSection() {
           </motion.div>
         </motion.div>
 
-        {/* 4. Panneau Processus Business (Rassurance Client) */}
         <motion.aside
           initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -127,9 +122,9 @@ export function HeroSection() {
 
           <div className="grid gap-2 pt-5">
             {[
-              ["01", "Cadrage Stratégique", "Audit & Direction visuelle"],
-              ["02", "Production Studio", "Design 3D & Interfaces"],
-              ["03", "Déploiement", "Livraison des assets finaux"]
+              ["01", "Cadrage Stratégique", "Audit & direction visuelle"],
+              ["02", "Production Studio", "Design 3D & interfaces"],
+              ["03", "Déploiement", "Assets finaux, prêts à servir"]
             ].map(([step, title, description]) => (
               <div
                 key={step}
@@ -138,7 +133,9 @@ export function HeroSection() {
                 <p className="font-display text-sm text-white/30">{step}</p>
                 <div>
                   <p className="text-sm tracking-wide text-white/80">{title}</p>
-                  <p className="text-[11px] text-white/40 mt-0.5">{description}</p>
+                  <p className="mt-0.5 text-[11px] text-white/40">
+                    {description}
+                  </p>
                 </div>
               </div>
             ))}

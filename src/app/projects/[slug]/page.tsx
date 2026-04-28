@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { notFound } from "next/navigation";
 
 import { ProjectDetailHero } from "@/components/project-detail-hero";
@@ -86,10 +87,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
             <Link
               href="/#contact"
-              data-cursor="contact"
               className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/5 bg-white/[0.04] px-5 text-sm font-semibold text-foreground backdrop-blur-xl transition-colors hover:bg-white/[0.08]"
             >
               Envoyer un brief
+              <ArrowUpRight aria-hidden="true" className="ml-2 size-4" />
             </Link>
           </aside>
 
@@ -115,26 +116,32 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               ))}
             </div>
 
-            <div className="space-y-7">
-              <p className="text-sm uppercase tracking-[0.24em] text-primary">
-                Lecture éditoriale
-              </p>
-              <h2 className="font-display text-4xl font-semibold leading-none sm:text-6xl">
-                Une présence digitale qui ne cherche pas à plaire à tout le monde.
-              </h2>
-              <div className="grid gap-6 text-base leading-8 text-muted-foreground md:grid-cols-2">
-                <p>
-                  Le projet est pensé comme une pièce éditoriale : une entrée
-                  forte, une narration courte, des preuves visibles et un chemin
-                  direct vers le contact. Les images sont servies via Cloudinary
-                  pour rester nettes sans alourdir la page.
+            <div className="grid gap-8 md:grid-cols-2">
+              <section className="rounded-lg border border-white/5 bg-white/[0.03] p-5 sm:p-6">
+                <p className="text-sm uppercase tracking-[0.24em] text-primary">
+                  Le Brief
                 </p>
-                <p>
-                  Côté système, Neon garde les demandes, les statuts et les
-                  accès client. Le front reste tendu, mais chaque action utile
-                  est connectée : brief, dashboard, notifications et suivi privé.
+                <h2 className="mt-5 font-display text-4xl font-semibold leading-none">
+                  Installer un signe. Couper le bruit.
+                </h2>
+                <p className="mt-5 text-base leading-8 text-muted-foreground">
+                  Donner au projet une présence reconnaissable avant même le
+                  premier clic, sans surcharger l&apos;interface.
                 </p>
-              </div>
+              </section>
+
+              <section className="rounded-lg border border-white/5 bg-white/[0.03] p-5 sm:p-6">
+                <p className="text-sm uppercase tracking-[0.24em] text-primary">
+                  L&apos;Exécution
+                </p>
+                <h2 className="mt-5 font-display text-4xl font-semibold leading-none">
+                  Rendu 3D. Lumière. Assets propres.
+                </h2>
+                <p className="mt-5 text-base leading-8 text-muted-foreground">
+                  Rendu C4D, cadrage lumière, intégration Cloudinary et livraison
+                  en formats exploitables sans friction.
+                </p>
+              </section>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -151,7 +158,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {nextProject ? (
               <Link
                 href={`/projects/${nextProject.slug}`}
-                data-cursor="voir"
                 className="group block rounded-lg border border-white/5 bg-white/[0.04] p-5 transition-colors hover:border-white/15 sm:p-6"
               >
                 <p className="text-sm uppercase tracking-[0.22em] text-primary">
