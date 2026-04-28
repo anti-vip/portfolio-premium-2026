@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { CustomCursor } from "@/components/custom-cursor";
+import { CommandMenu } from "@/components/command-menu";
 import { MotionProvider } from "@/components/motion-provider";
 import { SmoothScroll } from "@/components/smooth-scroll";
 
@@ -52,8 +52,8 @@ export default function RootLayout({
       <body className="antialiased">
         <SmoothScroll />
         <MotionProvider>{children}</MotionProvider>
+        <CommandMenu />
         <div className="site-noise" aria-hidden="true" />
-        <CustomCursor />
       </body>
     </html>
   );
